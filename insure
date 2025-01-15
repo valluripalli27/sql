@@ -1,0 +1,91 @@
+-- Create a database for the insurance system
+CREATE DATABASE InsuranceSystem;
+
+-- Use the database
+USE InsuranceSystem;
+
+-- Table for customers
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    DateOfBirth DATE NOT NULL,
+    Address VARCHAR(255),
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100) UNIQUE,
+    DateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table for insurance policies
+CREATE TABLE Policies (
+    PolicyID INT AUTO_INCREMENT PRIMARY KEY,
+    PolicyNumber VARCHAR(50) UNIQUE NOT NULL,
+    PolicyType VARCHAR(50) NOT NULL,
+    CoverageAmount DECIMAL(15, 2) NOT NULL,
+    PremiumAmount DECIMAL(15, 2) NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL,
+    CustomerID INT NOT NULL,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+-- Table for claims
+CREATE TABLE Claims (
+    ClaimID INT AUTO_INCREMENT PRIMARY KEY,
+    ClaimNumber VARCHAR(50) UNIQUE NOT NULL,
+    PolicyID INT NOT NULL,
+    ClaimDate DATE NOT NULL,
+    ClaimAmount DECIMAL(15, 2) NOT NULL,
+    ClaimStatus VARCHAR(50) DEFAULT 'Pending',
+    FOREIGN KEY (PolicyID) REFERENCES Policies(PolicyID)
+);
+
+-- Table for agents
+CREATE TABLE Agents (
+    AgentID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100) UNIQUE,
+    HireDate DATE NOT NULL
+);
+
+-- Table for payments
+CREATE TABLE Payments (
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    PolicyID INT NOT NULL,
+    PaymentDate DATE NOT NULL,
+    PaymentAmount DECIMAL(15, 2) NOT NULL,
+    PaymentMethod VARCHAR(50) NOT NULL,
+    FOREIGN KEY (PolicyID) REFERENCES Policies(PolicyID)
+);
+
+-- Insert sample data into Customers table
+INSERT INTO Customers (FirstName, LastName, DateOfBirth, Address, PhoneNumber, Email)
+VALUES 
+('John', 'Doe', '1985-05-15', '123 Elm Street', '555-123-4567', 'john.doe@example.com'),
+('Jane', 'Smith', '1990-08-20', '456 Oak Avenue', '555-987-6543', 'jane.smith@example.com');
+
+-- Insert sample data into Policies table
+INSERT INTO Policies (PolicyNumber, PolicyType, CoverageAmount, PremiumAmount, StartDate, EndDate, CustomerID)
+VALUES 
+('P12345', 'Health Insurance', 100000.00, 200.00, '2025-01-01', '2025-12-31', 1),
+('P67890', 'Car Insurance', 50000.00, 150.00, '2025-01-01', '2025-12-31', 2);
+
+-- Insert sample data into Claims table
+INSERT INTO Claims (ClaimNumber, PolicyID, ClaimDate, ClaimAmount, ClaimStatus)
+VALUES 
+('C001', 1, '2025-01-10', 5000.00, 'Approved'),
+('C002', 2, '2025-01-15', 3000.00, 'Pending');
+
+-- Insert sample data into Agents table
+INSERT INTO Agents (FirstName, LastName, PhoneNumber, Email, HireDate)
+VALUES 
+('Alice', 'Johnson', '555-654-3210', 'alice.johnson@example.com', '2024-01-01'),
+('Bob', 'Williams', '555-321-9876', 'bob.williams@example.com', '2023-05-15');
+
+-- Insert sample data into Payments table
+INSERT INTO Payments (PolicyID, PaymentDate, PaymentAmount, PaymentMethod)
+VALUES 
+(1, '2025-01-01', 200.00, 'Credit Card'),
+(2, '2025-01-01', 150.00, 'Bank Transfer');
