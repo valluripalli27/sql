@@ -1,0 +1,38 @@
+ODL class schema for company ER schema
+Interface employee (extent employees, key (Ssn)) {
+Attribute string Ssn,
+Attribute string name,
+Attribute string address,
+Attribute float salary,
+relationship Department works for
+inverse Department :: employees,
+relationship Department manages
+inverse Department :: manager,
+relationship set (Employee) supervisees
+inverse supervisor,
+relationship Employee supervisor
+inverse supervisee,
+}
+Interface Department (extends departments, key (dno)) {
+attribute string dno,
+attribute string dname,
+attribute set (string) locations,
+relationship set (string) locations,
+inverse employee :: Works for,
+relationship Employee manager
+inverse Employee :: manages,
+relationship set (project) projects
+inverse project :: controlling Dept
+
+}
+Interface project (extends departments, key (pno)) {
+attribute string pno,
+attribute string pname,
+attribute string location,
+relationship Department controlling Dept
+inverse Department :: projects,
+relationship set(Employee) employees
+inverse Department :: projects,
+relationship set (Employee) employees
+inverse Employee :: works on
+}
